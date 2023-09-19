@@ -4,6 +4,7 @@ import { Animated, PanResponder, StyleSheet, View } from "react-native";
 const Lab08 = () => {
   const scale = useRef(new Animated.Value(1)).current;
   const pan = useRef(new Animated.ValueXY()).current;
+  
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderGrant: () => {
@@ -13,14 +14,18 @@ const Lab08 = () => {
       });
       pan.setValue({ x: 0, y: 0 });
     },
+  
     onPanResponderMove: (evt, gestureState) => {
       const touches = evt.nativeEvent.touches;
       if (touches.length >= 2) {
+
         Animated.spring(scale, {
-          toValue: 3,
+          toValue:3,
           friction: 3,
           useNativeDriver: false,
+
         }).start();
+
       }
       else{
         Animated.event(
@@ -32,17 +37,17 @@ const Lab08 = () => {
             },
           ],
           { useNativeDriver: false }
-        )
+        )(evt,gestureState);
       }
     },
-
     onPanResponderRelease: () => {
-      Animated.spring(scale, {
-        toValue: 1,
-        friction: 3,
-        useNativeDriver: false,
-      }).start();
-     
+
+          Animated.spring(scale, {
+            toValue: 1,
+            friction: 3,
+            useNativeDriver: false,
+          }).start();
+      pan.flattenOffset();
     },
 
     // 
@@ -74,11 +79,13 @@ const Lab08 = () => {
 
   
   return (
-    <View style={styles.container}>
-      <Animated.View
-        {...panResponder.panHandlers}
-        style={[pan.getLayout(),styles.box, { transform: [{ scale: scale }] }]}
+    <View  style={styles.container}>
+       <Animated.Image
+       {...panResponder.panHandlers}
+      style={ [pan.getLayout(),styles.it_logo, { transform: [{ scale: scale }] }] }
+      source={require("../assets/IT_Logo.png")}
       />
+
     </View>
   );
 };
@@ -96,6 +103,9 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 4,
   },
+  it_logo:{
+    width: 80, height: 80, resizeMode: "stretch",
+}
 });
 
 export default Lab08;
